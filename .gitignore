@@ -1,0 +1,8 @@
+﻿node_modules/
+edge-headless-profile/
+*.tmp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
