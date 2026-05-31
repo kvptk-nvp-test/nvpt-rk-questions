@@ -7,21 +7,16 @@
     <style>
         :root {
             color-scheme: dark;
-            --bg: #030303;
-            --panel: rgba(14, 14, 18, 0.92);
-            --panel-2: rgba(18, 18, 22, 0.94);
-            --panel-3: #26262c;
-            --text: #f5f5f1;
-            --muted: #a4a4ab;
-            --line: rgba(255, 255, 255, 0.08);
-            --accent: #f3f3ef;
-            --accent-2: #9f9f96;
-            --accent-soft: rgba(255, 255, 255, 0.08);
+            --bg: #000000;
+            --panel: #111111;
+            --text: #ffffff;
+            --muted: #888888;
+            --line: #222222;
+            --accent: #ffffff;
             --danger: #ff8181;
             --danger-soft: rgba(255, 129, 129, 0.12);
             --success: #7df2b2;
             --success-soft: rgba(125, 242, 178, 0.12);
-            --shadow: 0 28px 60px rgba(0, 0, 0, 0.42);
         }
 
         * {
@@ -35,108 +30,56 @@
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: var(--text);
-            background:
-                radial-gradient(circle at top, rgba(255, 255, 255, 0.09), transparent 26%),
-                radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 20%),
-                linear-gradient(180deg, #060606 0%, #000 100%);
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18%),
-                radial-gradient(circle at bottom center, rgba(255, 255, 255, 0.05), transparent 32%);
-            opacity: 0.9;
+            background: var(--bg);
         }
 
         .page {
-            position: relative;
-            max-width: 620px;
+            max-width: 500px;
             margin: 0 auto;
-            padding:
-                calc(18px + env(safe-area-inset-top, 0px))
-                12px
-                calc(28px + env(safe-area-inset-bottom, 0px));
+            padding: 20px 16px;
         }
 
         .shell {
-            position: relative;
-            background: linear-gradient(180deg, rgba(12, 12, 15, 0.97), rgba(6, 6, 8, 0.99));
-            border: 1px solid var(--line);
-            border-radius: 32px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            backdrop-filter: blur(18px);
-        }
-
-        .shell::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 28%),
-                linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 46%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .hero {
-            position: relative;
-            padding: 22px 18px 18px;
-            border-bottom: 1px solid var(--line);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 {
+            margin: 8px 0 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
 
         .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--accent);
+            display: block;
+            color: var(--muted);
             font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
 
-        h1 {
-            margin: 16px 0 12px;
-            max-width: 11ch;
-            font-size: clamp(32px, 9vw, 58px);
-            line-height: 0.98;
-            letter-spacing: -0.04em;
-        }
-
-        .lead {
-            margin: 0;
-            max-width: 34rem;
-            font-size: 15px;
-            line-height: 1.65;
-            color: var(--muted);
-        }
-
         .content {
-            padding: 16px;
+            display: contents;
         }
 
         .card {
-            background: linear-gradient(180deg, rgba(17, 17, 21, 0.95), rgba(9, 9, 12, 0.97));
+            background: var(--panel);
             border: 1px solid var(--line);
-            border-radius: 24px;
-            padding: 18px;
-            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 20px;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .start-grid,
         .quiz-layout {
@@ -144,18 +87,10 @@
             gap: 14px;
         }
 
-        .card h2,
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: clamp(20px, 5vw, 28px);
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-        }
-
-        .card p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.6;
+        .card h2 {
+            margin: 0 0 16px;
+            font-size: 20px;
+            font-weight: 700;
         }
 
         .field {
@@ -169,53 +104,44 @@
         }
 
         label {
-            display: block;
-            margin-bottom: 8px;
+            display: inline-block;
+            margin-bottom: 6px;
             font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 0.04em;
+            font-size: 11px;
             text-transform: uppercase;
-            color: #d6d6cf;
+            color: var(--muted);
         }
 
         input,
         select,
         button {
             width: 100%;
-            border: none;
-            border-radius: 18px;
+            border-radius: 12px;
             font: inherit;
+            transition: all 0.2s ease;
         }
 
         input,
         select {
-            padding: 15px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            background: rgba(255, 255, 255, 0.04);
+            padding: 14px;
+            border: 1px solid var(--line);
+            background: #000;
             color: var(--text);
             outline: none;
-            appearance: none;
         }
 
-        input::placeholder {
-            color: #7b7b82;
-        }
+        input::placeholder { color: #444; }
 
         input:focus,
         select:focus {
-            border-color: rgba(255, 255, 255, 0.26);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.06);
+            border-color: #555;
+            background: #050505;
         }
 
         button {
-            padding: 15px 18px;
+            padding: 16px;
             cursor: pointer;
-            transition:
-                transform 0.18s ease,
-                box-shadow 0.18s ease,
-                opacity 0.18s ease,
-                background-color 0.18s ease;
+            border: none;
         }
 
         button:hover {
@@ -226,47 +152,26 @@
             transform: translateY(0);
         }
 
-        button:disabled {
-            opacity: 0.46;
-            cursor: not-allowed;
-            transform: none;
-        }
+        button:active { transform: scale(0.98); }
+
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
 
         .btn-primary {
-            background: linear-gradient(180deg, #fafaf6, #d9d9d2);
-            color: #060606;
-            font-weight: 800;
-            box-shadow: 0 18px 34px rgba(255, 255, 255, 0.12);
+            background: #fff;
+            color: #000;
+            font-weight: 700;
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.04);
+            background: #1a1a1a;
             color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.09);
             font-weight: 700;
         }
 
         .btn-next {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08));
+            background: #333;
             color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.12);
             font-weight: 700;
-        }
-
-        .facts {
-            display: grid;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .fact {
-            padding: 14px 15px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.045);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #d6d6d2;
-            font-size: 14px;
-            line-height: 1.55;
         }
 
         .meta-row {
@@ -277,61 +182,47 @@
         }
 
         .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--accent);
-            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #111;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.04em;
         }
 
-        .pill.warn {
-            background: rgba(255, 255, 255, 0.03);
-            color: #b5b5ad;
-        }
-
         .navigator {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 8px;
-            margin-top: 16px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            margin-top: 12px;
         }
 
         .nav-btn {
-            min-height: 44px;
-            padding: 12px 0;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 0;
+            border-radius: 8px;
+            background: #111;
+            border: 1px solid var(--line);
             color: var(--muted);
-            font-weight: 700;
-            box-shadow: none;
+            font-size: 12px;
         }
 
         .nav-btn.current {
-            background: var(--accent);
-            color: #050505;
-            border-color: transparent;
+            background: #fff;
+            color: #000;
+            border-color: #fff;
         }
 
-        .nav-btn.done {
-            background: rgba(255, 255, 255, 0.12);
-            color: var(--text);
-        }
+        .nav-btn.done { border-color: #444; color: #fff; }
 
         .progress-wrap {
-            margin: 0 0 16px;
+            margin-bottom: 20px;
         }
 
         .progress-top {
             display: flex;
             justify-content: space-between;
-            gap: 12px;
             margin-bottom: 10px;
             font-size: 12px;
             color: var(--muted);
@@ -341,245 +232,107 @@
         }
 
         .progress-bar {
-            height: 8px;
+            height: 4px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.06);
+            background: #111;
             overflow: hidden;
         }
 
         .progress-value {
             height: 100%;
             width: 0;
-            border-radius: 999px;
-            background: linear-gradient(90deg, #fff, #8f8f88);
+            background: #fff;
             transition: width 0.2s ease;
-        }
-
-        .question-box {
-            padding: 18px;
-            border-radius: 26px;
-            border: 1px solid var(--line);
-            background: linear-gradient(180deg, rgba(15, 15, 18, 0.98), rgba(8, 8, 10, 0.98));
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
 
         .question-number {
             margin-bottom: 10px;
-            color: #bbbbb3;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
+            color: var(--muted);
             font-size: 12px;
+            font-weight: 700;
         }
 
         .question-text {
             margin: 0;
-            font-size: clamp(22px, 6.2vw, 36px);
-            line-height: 1.12;
-            letter-spacing: -0.03em;
+            font-size: 20px;
+            line-height: 1.3;
+            font-weight: 600;
         }
 
         .answers {
             display: grid;
             gap: 10px;
-            margin-top: 18px;
+            margin-top: 24px;
         }
 
         .answer-btn {
-            padding: 16px;
+            padding: 14px 16px;
             text-align: left;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #111;
+            border: 1px solid var(--line);
             color: var(--text);
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 15px;
         }
 
-        .answer-btn:hover {
-            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
-        }
-
-        .answer-btn.selected {
-            background: rgba(255, 255, 255, 0.14);
-            border-color: rgba(255, 255, 255, 0.18);
-            color: var(--accent);
-        }
-
-        .answer-btn.correct {
-            background: var(--success-soft);
-            border-color: rgba(125, 242, 178, 0.24);
-            color: var(--success);
-        }
-
-        .answer-btn.wrong {
-            background: var(--danger-soft);
-            border-color: rgba(255, 129, 129, 0.24);
-            color: var(--danger);
-        }
-
-        .answer-btn.dimmed {
-            opacity: 0.55;
-        }
+        .answer-btn.selected { border-color: #fff; background: #222; }
 
         .feedback {
             margin-top: 16px;
-            padding: 14px 15px;
-            border-radius: 18px;
-            font-weight: 700;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
             line-height: 1.5;
-            border: 1px solid transparent;
         }
 
-        .feedback.correct {
-            background: var(--success-soft);
-            color: var(--success);
-            border-color: rgba(125, 242, 178, 0.18);
-        }
-
-        .feedback.wrong {
-            background: var(--danger-soft);
-            color: var(--danger);
-            border-color: rgba(255, 129, 129, 0.18);
-        }
+        .feedback.wrong { background: var(--danger-soft); color: var(--danger); }
 
         .quiz-actions {
             display: flex;
-            flex-direction: column;
             gap: 10px;
-            margin-top: 18px;
-            padding-top: 10px;
+            margin-top: 24px;
         }
+
+        .quiz-actions button { flex: 1; }
 
         .result-box {
             text-align: center;
-            padding: 24px 18px;
+            padding: 40px 20px;
         }
 
         .score-ring {
-            width: 148px;
-            height: 148px;
-            margin: 18px auto;
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
             border-radius: 50%;
             display: grid;
             place-items: center;
-            background:
-                radial-gradient(circle at center, var(--panel) 0 58%, transparent 59%),
-                conic-gradient(var(--accent) 0deg, var(--accent-2) 0deg, var(--panel-3) 0deg);
-            border: 1px solid var(--line);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border: 2px solid var(--line);
         }
 
-        .score-ring span {
-            display: block;
-            font-size: 34px;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
+        .score-ring span { font-size: 28px; font-weight: 800; }
 
         .result-title {
-            margin: 0 0 10px;
-            font-size: clamp(24px, 6vw, 34px);
-            letter-spacing: -0.03em;
+            margin: 0 0 8px;
+            font-size: 24px;
         }
 
         .result-note {
-            margin: 0;
             color: var(--muted);
-            font-size: 15px;
-            line-height: 1.6;
+            font-size: 14px;
         }
 
         .result-actions {
-            display: flex;
-            flex-direction: column;
+            display: grid;
             gap: 10px;
-            max-width: 520px;
-            margin: 20px auto 0;
+            margin-top: 30px;
         }
 
-        .footnote {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.55;
-        }
+        .footnote { margin-top: 12px; font-size: 11px; color: var(--muted); }
 
-        @media (max-width: 699px) {
-            .shell {
-                border-radius: 28px;
-            }
-
-            .card h2,
-            .card h3 {
-                max-width: 14ch;
-            }
-
-            .quiz-layout > div:last-child {
-                min-width: 0;
-            }
-
-            .quiz-actions {
-                position: sticky;
-                bottom: 0;
-                margin: 18px -4px -4px;
-                padding: 14px 4px 4px;
-                background:
-                    linear-gradient(180deg, rgba(7, 7, 9, 0), rgba(7, 7, 9, 0.92) 28%, rgba(7, 7, 9, 0.98) 100%);
-            }
-        }
-
-        @media (min-width: 700px) {
-            .page {
-                max-width: 1080px;
-                padding: 28px 18px 34px;
-            }
-
-            .hero {
-                padding: 30px 28px 22px;
-            }
-
-            .content {
-                padding: 22px 28px 28px;
-            }
-
-            .card,
-            .question-box {
-                padding: 22px;
-                border-radius: 28px;
-            }
-
-            .start-grid {
-                grid-template-columns: 1.2fr 0.8fr;
-                gap: 18px;
-            }
-
-            .quiz-layout {
-                grid-template-columns: 280px 1fr;
-                gap: 18px;
-                align-items: start;
-            }
-
-            .input-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .navigator {
-                gap: 10px;
-            }
-
-            .quiz-actions,
-            .result-actions {
-                flex-direction: row;
-            }
-
-            .quiz-actions button,
-            .result-actions button {
-                flex: 1;
-            }
-
-            .score-ring {
-                width: 170px;
-                height: 170px;
-            }
+        @media (min-width: 500px) {
+            .page { padding: 40px 20px; }
         }
     </style>
 </head>
@@ -625,11 +378,11 @@
                 <section id="screen-quiz" class="hidden">
                     <div class="meta-row">
                         <div class="pill" id="quiz-theme-pill">Тема</div>
-                        <div class="pill warn" id="quiz-count-pill">30 вопросов</div>
+                        <div class="pill" id="quiz-count-pill">30 вопросов</div>
                     </div>
 
                     <div class="quiz-layout">
-                        <aside class="card">
+                        <aside>
                             <h3>Навигация</h3>
                             <div class="navigator" id="navigator"></div>
                         </aside>
@@ -645,7 +398,7 @@
                                 </div>
                             </div>
 
-                            <div class="question-box">
+                            <div class="card">
                                 <div class="question-number" id="question-number">Вопрос 1</div>
                                 <p class="question-text" id="question-text"></p>
                                 <div class="answers" id="answers"></div>
