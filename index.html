@@ -587,16 +587,15 @@
     <div class="page">
         <div class="shell">
             <div class="hero">
-                <div class="eyebrow">НВТП РК • 32 темы</div>
-                <h1>Тест по темам начальной военной и технологической подготовки</h1>
+                <div class="eyebrow">НВТП РК</div>
+                <h1>Итоговое тестирование</h1>
             </div>
 
-            <div class="content">Й
+            <div class="content">
                 <section id="screen-start">
                     <div class="start-grid">
                         <div class="card">
                             <h2>Выбор темы</h2>
-                            <p>Вопросы составлены по указанным вами темам и критериям оценивания НВТП РК в формате итогового тематического теста.</p>
 
                             <div class="input-grid">
                                 <div class="field">
@@ -619,10 +618,6 @@
                             <div class="field">
                                 <button id="start-btn" class="btn-primary">Начать тест</button>
                             </div>
-
-                            <div class="footnote" id="theme-preview">
-                                После выбора темы здесь появится ее название и краткая информация.
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -636,7 +631,6 @@
                     <div class="quiz-layout">
                         <aside class="card">
                             <h3>Навигация</h3>
-                            <p>Нажмите на номер, чтобы перейти к нужному вопросу. Отвеченные вопросы подсвечиваются.</p>
                             <div class="navigator" id="navigator"></div>
                         </aside>
 
@@ -771,20 +765,16 @@
         }
 
         function buildQuestions(themeItem) {
-            const questions = themeItem.questions || [];
-            const preparedQuestions = questions.map((q, index) => {
+            return shuffleItems((themeItem.questions || []).map((q, index) => {
                 const correctAnswer = q.options[q.answer];
                 const shuffledOptions = shuffleItems(q.options);
-                
                 return {
                     id: q.id || `${themeItem.id}-${index + 1}`,
                     text: q.question,
                     options: shuffledOptions,
                     correctIndex: shuffledOptions.indexOf(correctAnswer)
                 };
-            });
-
-            return shuffleItems(preparedQuestions);
+            }));
         }
 
         function setActiveScreen(screen) {
@@ -793,16 +783,6 @@
             screenResult.classList.add("hidden");
             screen.classList.remove("hidden");
             window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-
-        function updateThemePreview() {
-            const selected = THEMES.find((item) => String(item.id) === themeSelect.value);
-            if (!selected) {
-                themePreview.textContent = "После выбора темы здесь появится ее название и краткая информация.";
-                return;
-            }
-
-            themePreview.textContent = `Тема ${selected.id}. ${selected.title}. Для этой темы будет собран тест из 30 вопросов.`;
         }
 
         function fillThemeOptions() {
@@ -909,15 +889,10 @@
         }
 
         function submitResult(correct, total, percent) {
-            const themeId = state.selectedTheme.id;
-            const themeCode = `Тема ${themeId}`;
-            const elapsedMs = state.startedAt ? Math.max(Date.now() - state.startedAt, 0) : 0;
             const params = new URLSearchParams({
                 name: state.studentName,
                 surname: state.studentSurname,
-                theme_id: String(themeId),
-                theme_code: themeCode,
-                theme_bucket: themeCode,
+                theme_id: String(state.selectedTheme.id),
                 theme_title: state.selectedTheme.title,
                 score_percent: String(percent),
                 correct_count: String(correct),
@@ -925,13 +900,12 @@
                 answers_map: formatAnswersForSubmit(),
                 question_order: formatQuestionOrderForSubmit(),
                 submitted_at: new Date().toISOString(),
-                duration_ms: String(elapsedMs)
+                duration_ms: String(state.startedAt ? Date.now() - state.startedAt : 0)
             });
 
             try {
-                const beacon = new Image();
-                beacon.src = `${GOOGLE_SCRIPT_URL}?${params.toString()}`;
-                submissionStatus.textContent = `Результат по теме ${themeId} отправлен в Google Apps Script.`;
+                new Image().src = `${GOOGLE_SCRIPT_URL}?${params.toString()}`;
+                submissionStatus.textContent = "Результат успешно сохранен.";
             } catch (error) {
                 submissionStatus.textContent = "Результат показан на экране, но отправку в Google Apps Script не удалось запустить.";
             }
@@ -961,7 +935,6 @@
                 
                 const data = await response.json();
                 state.selectedTheme = selected;
-                // Сохраняем исходные вопросы в объект темы, чтобы работал restartCurrentTheme
                 state.selectedTheme.questions = data.questions;
                 state.questions = buildQuestions(state.selectedTheme);
                 
@@ -1001,10 +974,8 @@
                 `conic-gradient(var(--accent) 0deg, var(--accent-2) ${degrees}deg, var(--panel-3) ${degrees}deg 360deg)`;
 
             resultTitle.textContent = `Тема ${state.selectedTheme.id} завершена`;
-            resultNote.textContent =
-                `${state.studentSurname} ${state.studentName}: правильных ответов ${correct} из ${total}. ` +
-                `Итог по выбранной теме показан только после завершения теста.`;
-            submissionStatus.textContent = "Отправка результата...";
+            resultNote.textContent = `${state.studentSurname} ${state.studentName}: ${correct} из ${total} правильных ответов.`;
+            submissionStatus.textContent = "Сохранение...";
 
             setActiveScreen(screenResult);
             submitResult(correct, total, percent);
@@ -1055,9 +1026,7 @@
         }
 
         fillThemeOptions();
-        updateThemePreview();
 
-        themeSelect.addEventListener("change", updateThemePreview);
         startBtn.addEventListener("click", startQuiz);
         prevBtn.addEventListener("click", goPrev);
         nextBtn.addEventListener("click", goNext);
