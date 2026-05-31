@@ -123,6 +123,7 @@
 
         input,
         select {
+            display: block;
             padding: 14px;
             border: 1px solid var(--line);
             background: #000;
@@ -155,6 +156,8 @@
         button:active { transform: scale(0.98); }
 
         button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        button:disabled { opacity: 0.2; transform: none; cursor: not-allowed; }
 
         .btn-primary {
             background: #fff;
@@ -341,7 +344,7 @@
         <div class="shell">
             <div class="hero">
                 <div class="eyebrow">НВТП РК</div>
-                <h1>Тестирование по разным темам.</h1>
+                <h1>Итоговое тестирование</h1>
             </div>
 
             <div class="content">
@@ -369,7 +372,7 @@
                             </div>
 
                             <div class="field">
-                                <button id="start-btn" class="btn-primary">Начать тест</button>
+                                <button id="start-btn" class="btn-primary" disabled>Начать тест</button>
                             </div>
                         </div>
                     </div>
@@ -484,7 +487,6 @@
         const studentNameInput = document.getElementById("student-name");
         const studentSurnameInput = document.getElementById("student-surname");
         const themeSelect = document.getElementById("theme-select");
-        const themePreview = document.getElementById("theme-preview");
         const startBtn = document.getElementById("start-btn");
         const screenStart = document.getElementById("screen-start");
         const screenQuiz = document.getElementById("screen-quiz");
@@ -641,7 +643,7 @@
             return state.questions.map((question, index) => `${index + 1}:${question.id}`).join("|");
         }
 
-        function submitResult(correct, total, percent) {
+        async function submitResult(correct, total, percent) {
             const params = new URLSearchParams({
                 name: state.studentName,
                 surname: state.studentSurname,
@@ -656,27 +658,17 @@
                 duration_ms: String(state.startedAt ? Date.now() - state.startedAt : 0)
             });
 
-            try {
-                new Image().src = `${GOOGLE_SCRIPT_URL}?${params.toString()}`;
-                submissionStatus.textContent = "Результат успешно сохранен.";
-            } catch (error) {
-                submissionStatus.textContent = "Результат показан на экране, но отправку в Google Apps Script не удалось запустить.";
-            }
+            fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { mode: 'no-cors' })
+                .then(() => { submissionStatus.textContent = "Результат успешно сохранен."; })
+                .catch(() => { submissionStatus.textContent = "Ошибка при сохранении в облако."; });
         }
 
         async function startQuiz() {
             const selected = THEMES.find((item) => String(item.id) === themeSelect.value);
-            if (!selected) {
-                themePreview.textContent = "Сначала выберите тему из списка.";
-                return;
-            }
-
             const studentName = studentNameInput.value.trim();
             const studentSurname = studentSurnameInput.value.trim();
-            if (!studentName || !studentSurname) {
-                themePreview.textContent = "Сначала заполните имя и фамилию, затем выберите тему и начните тест.";
-                return;
-            }
+
+            if (!selected || !studentName || !studentSurname) return;
 
             startBtn.disabled = true;
             startBtn.textContent = "Загрузка вопросов...";
@@ -700,13 +692,14 @@
                 state.startedAt = Date.now();
                 submissionStatus.textContent = "";
             } catch (error) {
-                themePreview.textContent = `Ошибка: ${error.message}`;
-                startBtn.disabled = false;
                 startBtn.textContent = "Начать тест";
+                alert(`Ошибка загрузки: ${error.message}`);
+                validateForm();
                 return;
             } finally {
                 startBtn.disabled = false;
                 startBtn.textContent = "Начать тест";
+                validateForm();
             }
 
             quizThemePill.textContent = `Тема ${selected.id}. ${selected.title}`;
@@ -719,12 +712,11 @@
             const total = state.questions.length;
             const correct = correctCount();
             const percent = Math.round((correct / total) * 100);
-            const degrees = Math.max(0, Math.min(360, (percent / 100) * 360));
 
             scoreValue.textContent = `${percent}%`;
             scoreRing.style.background =
                 `radial-gradient(circle at center, var(--panel) 0 58%, transparent 59%), ` +
-                `conic-gradient(var(--accent) 0deg, var(--accent-2) ${degrees}deg, var(--panel-3) ${degrees}deg 360deg)`;
+                `conic-gradient(var(--accent) ${percent}%, var(--line) 0deg)`;
 
             resultTitle.textContent = `Тема ${state.selectedTheme.id} завершена`;
             resultNote.textContent = `${state.studentSurname} ${state.studentName}: ${correct} из ${total} правильных ответов.`;
@@ -776,9 +768,18 @@
             document.title = "Тест НВТП РК";
             submissionStatus.textContent = "";
             setActiveScreen(screenStart);
+            validateForm();
+        }
+
+        function validateForm() {
+            const isValid = studentNameInput.value.trim() && studentSurnameInput.value.trim() && themeSelect.value;
+            startBtn.disabled = !isValid;
         }
 
         fillThemeOptions();
+
+        [studentNameInput, studentSurnameInput].forEach(el => el.addEventListener("input", validateForm));
+        themeSelect.addEventListener("change", validateForm);
 
         startBtn.addEventListener("click", startQuiz);
         prevBtn.addEventListener("click", goPrev);
